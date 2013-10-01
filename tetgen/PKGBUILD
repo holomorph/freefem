@@ -1,0 +1,31 @@
+# Contributor: Melancholy_Dream <pb41za@gmail.com>
+
+pkgname=tetgen
+pkgver=1.4.3
+pkgrel=1
+pkgdesc='A quality tetrahedral mesh generator'
+arch=('i686' 'x86_64')
+url="http://tetgen.org"
+license=('GPL')
+source=("http://tetgen.org/files/$pkgname$pkgver.tar.gz")
+sha256sums=('952711bb06b7f64fd855eb24c33f08e3faf40bdd54764de10bbe5ed5b0dce034')
+
+build() {
+  cd "$srcdir/$pkgname$pkgver"
+
+  FFLAGS="-DNDEBUG -mmmx -msse -msse2 -DBAMG_LONG_LONG -DNCHECKPTR -fPIC"
+
+  g++ $FFLAGS -DSELF_CHECK -DTETLIBRARY -c tetgen.cxx
+  g++ $FFLAGS -DSELF_CHECK -DTETLIBRARY -c predicates.cxx
+  ar rv libtet.a tetgen.o predicates.o
+  ranlib libtet.a
+}
+
+package() {
+  cd "$srcdir/$pkgname$pkgver"
+
+  install -Dm644 tetgen.h "$pkgdir/usr/include/tetgen.h"
+  install -Dm644 libtet.a "$pkgdir/usr/lib/libtet.a"
+}
+
+# vim: ts=2 sw=0 et

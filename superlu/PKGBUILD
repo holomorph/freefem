@@ -27,7 +27,7 @@ prepare() {
 build() {
   cd "$srcdir/SuperLU_$pkgver"
 
-  mkdir shared static
+  mkdir -p shared static
 
   msg "Building shared library..."
   cd shared
