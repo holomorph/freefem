@@ -1,0 +1,51 @@
+# Contributor: Anton Bazhenov <anton.bazhenov at gmail>
+# Contributor: Andrea 'dedalus' Turconi <andy.dedalus@gmail.com>
+# Contributor: 'lazork'
+
+pkgname=freefem++
+pkgver=3.25
+pkgrel=1
+pkgdesc="A PDE oriented language using the finite element method"
+arch=('i686' 'x86_64')
+url="http://www.freefem.org/ff++/index.htm"
+license=('LGPL')
+depends=('arpack' 'fftw' 'freeglut' 'suitesparse')
+makedepends=('gcc-fortran')
+source=("http://www.freefem.org/ff++/ftp/${pkgname}-${pkgver}.tar.gz"
+        'disable-doc.patch')
+sha256sums=('dd83f7958689db158ad6606e9126a7a74c6757d4b49c92628a82c24867c799c2'
+            '4df7aaecfc53f1721415cd38fd1b3ab066fc07cb118a13d32353c2338ba2e13d')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+  # disable doc
+  patch -p1 < "$srcdir/disable-doc.patch"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  ./configure \
+    --prefix=/usr \
+    --with-umfpack="-lumfpack -lsuitesparseconfig -lcholmod -lcolamd"
+
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+
+  # remove unneeded stuff
+  rm -f $pkgdir/usr/share/$pkgname/$pkgver/INSTALL*
+  rm -f $pkgdir/usr/share/$pkgname/$pkgver/{README_MAC,README_WINDOWS,mode-mi-edp.zip}
+  rm -rf "$pkgdir/usr/share/$pkgname/$pkgver/download"
+
+  # move license into proper place
+  install -d "$pkgdir/usr/share/licenses/$pkgname"
+  mv $pkgdir/usr/share/$pkgname/$pkgver/COPYRIGHT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim: ts=2 sw=2 et
