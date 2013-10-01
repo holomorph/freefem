@@ -10,7 +10,7 @@ arch=('i686' 'x86_64')
 url="http://www.freefem.org/ff++/index.htm"
 license=('LGPL')
 depends=('arpack' 'fftw' 'freeglut' 'suitesparse')
-makedepends=('gcc-fortran')
+makedepends=('ed' 'gcc-fortran')
 source=("http://www.freefem.org/ff++/ftp/${pkgname}-${pkgver}.tar.gz"
         'disable-doc.patch')
 sha256sums=('dd83f7958689db158ad6606e9126a7a74c6757d4b49c92628a82c24867c799c2'
@@ -18,6 +18,11 @@ sha256sums=('dd83f7958689db158ad6606e9126a7a74c6757d4b49c92628a82c24867c799c2'
 
 prepare() {
   cd "$pkgname-$pkgver"
+
+  # correct superlu headers
+  ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_ddefs.h"/<superlu\/slu_ddefs.h>/g\nw'
+  ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_zdefs.h"/<superlu\/slu_zdefs.h>/g\nw'
+  ed -s examples++-load/SuperLu.cpp <<< $',s/"superlu_enum_consts.h"/<superlu\/superlu_enum_consts.h>/g\nw'
 
   # disable doc
   patch -p1 < "$srcdir/disable-doc.patch"

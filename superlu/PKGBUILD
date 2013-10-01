@@ -1,0 +1,79 @@
+# Contributor: Giuseppe Borzi <gborzi@ieee.org>
+
+pkgname=superlu
+pkgver=4.3
+pkgrel=1
+pkgdesc="A set of subroutines to solve a sparse linear system"
+arch=('i686' 'x86_64')
+url="http://crd.lbl.gov/~xiaoye/SuperLU"
+license=('custom')
+depends=('blas')
+makedepends=('gcc-fortran')
+install="$pkgname.install"
+source=("${url}/${pkgname}_${pkgver}.tar.gz"
+        "${url}/License.txt"
+        "${url}/superlu_ug.pdf")
+sha256sums=('169920322eb9b9c6a334674231479d04df72440257c17870aaa0139d74416781'
+            '22940fbef47c81bb8e37e7224f305b19ad752f475b9cffd587af03d15a4b2729'
+            'cb9b6dca641582b8346fdb58f22bc0b1284b5cbf99a322f8094f824059be8e6a')
+
+prepare() {
+  cd "$srcdir/SuperLU_$pkgver"
+
+  # use linux specific stuff
+  cp MAKE_INC/make.linux make.inc
+}
+
+build() {
+  cd "$srcdir/SuperLU_$pkgver"
+
+  mkdir shared static
+
+  msg "Building shared library..."
+  cd shared
+  make -f ../SRC/Makefile VPATH=../SRC srcdir=../SRC CC=cc \
+    CFLAGS="$CFLAGS -fPIC" FORTRAN=gfortran FFLAGS="$CFLAGS -fPIC" \
+    PLAT="" BLASDEF="" BLASLIB="-lblas" CDEFS="-DAdd_" NOOPTS="-fPIC" \
+    ARCH="echo" ARCHFLAGS="" RANLIB="echo" \
+    SUPERLULIB=$srcdir/SuperLU_$pkgver/lib/lib$pkgname.a
+  gcc -shared -Wl,-soname,lib$pkgname.so.4 -o ../lib/lib$pkgname.so.$pkgver \
+    *.o -lblas -lm -lgfortran
+
+  msg "Building static library..."
+  cd ../static
+  make -f ../SRC/Makefile VPATH=../SRC srcdir=../SRC CC=cc \
+    CFLAGS="$CFLAGS" FORTRAN=gfortran FFLAGS="$CFLAGS" \
+    PLAT="" BLASDEF="" BLASLIB="-lblas" CDEFS="-DAdd_" \
+    ARCH="echo" ARCHFLAGS="" RANLIB="echo" \
+    SUPERLULIB=$srcdir/SuperLU_$pkgver/lib/lib$pkgname.a
+  ar cr ../lib/lib$pkgname.a *.o
+}
+
+check() {
+  cd "$srcdir/SuperLU_$pkgver"
+
+  make -j1 testing SuperLUroot="$srcdir/SuperLU_$pkgver" \
+    SUPERLULIB="$srcdir/SuperLU_$pkgver/lib/libsuperlu.a" \
+    BLASLIB="-lblas" CFLAGS="$CFLAGS"
+}
+
+package() {
+  cd "$srcdir/SuperLU_$pkgver"
+
+  # libs
+  install -Dm644 lib/libsuperlu.a "$pkgdir/usr/lib/libsuperlu.a"
+  install -Dm755 lib/libsuperlu.so.$pkgver "$pkgdir/usr/lib/libsuperlu.so.$pkgver"
+  ln -s $pkgdir/usr/lib/libsuperlu.so.$pkgver "$pkgdir/usr/lib/libsuperlu.so.4"
+  ln -s $pkgdir/usr/lib/libsuperlu.so.4 "$pkgdir/usr/lib/libsuperlu.so"
+
+  # headers
+  install -d "$pkgdir/usr/include/$pkgname"
+  install -m644 SRC/*.h "$pkgdir/usr/include/$pkgname"
+
+  # docs and license
+  install -Dm644 $srcdir/superlu_ug.pdf "$pkgdir/usr/share/doc/$pkgname/superlu_ug.pdf"
+  install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+  install -Dm644 $srcdir/License.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim: ts=2 sw=2 et
