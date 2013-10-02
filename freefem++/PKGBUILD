@@ -11,10 +11,13 @@ url="http://www.freefem.org/ff++/index.htm"
 license=('LGPL')
 depends=('arpack' 'fftw' 'freeglut' 'suitesparse')
 makedepends=('ed' 'gcc-fortran')
+backup=('etc/freefem++.pref')
 source=("http://www.freefem.org/ff++/ftp/${pkgname}-${pkgver}.tar.gz"
-        'disable-doc.patch')
+        'disable-doc.patch'
+        'configure-dirs.patch')
 sha256sums=('dd83f7958689db158ad6606e9126a7a74c6757d4b49c92628a82c24867c799c2'
-            '4df7aaecfc53f1721415cd38fd1b3ab066fc07cb118a13d32353c2338ba2e13d')
+            '4df7aaecfc53f1721415cd38fd1b3ab066fc07cb118a13d32353c2338ba2e13d'
+            '66a20a9ae7404d4268559ee317e68920d2dcdb055a8977d6c46122b08976d1cd')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -29,6 +32,9 @@ prepare() {
 
   # disable doc
   patch -p1 < "$srcdir/disable-doc.patch"
+
+  # control install locations with ./configure
+  patch -p1 < "$srcdir/configure-dirs.patch"
 }
 
 build() {
@@ -36,6 +42,7 @@ build() {
 
   ./configure \
     --prefix=/usr \
+    --sysconfdir=/etc \
     --with-umfpack="-lumfpack -lsuitesparseconfig -lcholmod -lcolamd"
 
   make
