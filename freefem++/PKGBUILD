@@ -16,8 +16,8 @@ source=("http://www.freefem.org/ff++/ftp/${pkgname}-${pkgver}.tar.gz"
         'disable-doc.patch'
         'configure-dirs.patch')
 sha256sums=('dd83f7958689db158ad6606e9126a7a74c6757d4b49c92628a82c24867c799c2'
-            '4df7aaecfc53f1721415cd38fd1b3ab066fc07cb118a13d32353c2338ba2e13d'
-            '66a20a9ae7404d4268559ee317e68920d2dcdb055a8977d6c46122b08976d1cd')
+            '19ba064469b9c38278fa1e396c0bcd1bb5d067a18eeaef980c86aff599881fdb'
+            '3e71a84310be143e0edf845b5f5f62f762e1e769c414acbcafadeb4a803856b2')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -54,13 +54,10 @@ package() {
   make DESTDIR="$pkgdir" install
 
   # remove unneeded stuff
-  rm -f $pkgdir/usr/share/$pkgname/$pkgver/INSTALL*
-  rm -f $pkgdir/usr/share/$pkgname/$pkgver/{README_MAC,README_WINDOWS,mode-mi-edp.zip}
-  rm -rf "$pkgdir/usr/share/$pkgname/$pkgver/download"
-
-  # move license into proper place
-  install -d "$pkgdir/usr/share/licenses/$pkgname"
-  mv $pkgdir/usr/share/$pkgname/$pkgver/COPYRIGHT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  rm -f $pkgdir/usr/share/$pkgname/INSTALL*
+  rm -f $pkgdir/usr/share/$pkgname/README_*
+  rm -f $pkgdir/usr/share/$pkgname/mode-mi-edp.zip
+  rm -rf $pkgdir/usr/share/$pkgname/download
 }
 
 # vim: ts=2 sw=2 et

@@ -1,6 +1,20 @@
+diff -aur a/Makefile.in b/Makefile.in
+--- a/Makefile.in	2013-09-05 04:53:50.000000000 -0400
++++ b/Makefile.in	2013-10-02 13:44:20.406937949 -0400
+@@ -1034,8 +1034,8 @@
+ # Native MacOS packaging
+ # ----------------------
+ install-exec-local:: 
+-	$(mkinstalldirs) -m 755 $(DESTDIR)$(pkgdatadir)/$(VERSION)
+-	tar cvf - $(FF_EXAMPLES_FILES)| (cd $(DESTDIR)$(pkgdatadir)/$(VERSION); tar xvf -)
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(pkgdatadir)
++	tar cvf - $(FF_EXAMPLES_FILES)| (cd $(DESTDIR)$(pkgdatadir); tar xvf -)
+ 	$(mkinstalldirs) -m 755 $(DESTDIR)${bindir}
+ 	-test `uname` = Darwin && $(INSTALL_SCRIPT) FreeFem++-CoCoa  $(DESTDIR)${bindir}
+ 
 diff -aur a/examples++-3d/Makefile.in b/examples++-3d/Makefile.in
---- a/examples++-3d/Makefile.in	2013-10-02 02:48:33.972307145 -0400
-+++ b/examples++-3d/Makefile.in	2013-10-02 02:48:45.195640944 -0400
+--- a/examples++-3d/Makefile.in	2013-09-05 04:53:51.000000000 -0400
++++ b/examples++-3d/Makefile.in	2013-10-02 13:44:20.406937949 -0400
 @@ -1152,8 +1152,8 @@
  	echo loadpath += \"./\" >>freefem++.pref
  3d-Leman.edp:freefem++.pref
@@ -13,8 +27,8 @@ diff -aur a/examples++-3d/Makefile.in b/examples++-3d/Makefile.in
  # To check the scripts against their reference values
  regtests.edp: regtests.m4 ../regtests.m4
 diff -aur a/examples++-load/Makefile.in b/examples++-load/Makefile.in
---- a/examples++-load/Makefile.in	2013-10-02 02:48:33.925640476 -0400
-+++ b/examples++-load/Makefile.in	2013-10-02 02:48:45.178974276 -0400
+--- a/examples++-load/Makefile.in	2013-09-05 04:53:51.000000000 -0400
++++ b/examples++-load/Makefile.in	2013-10-02 13:44:20.406937949 -0400
 @@ -1706,19 +1706,19 @@
  freefem++.pref:
  	echo loadpath = \"./\" >freefem++.pref
@@ -22,14 +36,14 @@ diff -aur a/examples++-load/Makefile.in b/examples++-load/Makefile.in
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/lib
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/include
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/etc
-+	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++
-+	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
-+	$(mkinstalldirs) -m 755 $(DESTDIR)$(sysconfdir)
 -	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(ff_prefix_dir)/include
 -	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(ff_prefix_dir)/lib
 -	echo loadpath += \"./\"  >$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
 -	echo loadpath += \"$(ff_prefix_dir)/lib\"  >>$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
 -	echo includepath += \"$(ff_prefix_dir)/idp\"  >>$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(sysconfdir)
 +	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(includedir)/freefem++
 +	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(libdir)/freefem++
 +	echo loadpath += \"./\"  >$(DESTDIR)$(sysconfdir)/freefem++.pref
@@ -45,8 +59,8 @@ diff -aur a/examples++-load/Makefile.in b/examples++-load/Makefile.in
  # FFCS: add tags for files that are not specified to automake by a SOURCE directive (this tags file is automatically
  # taken into account by automake when it sees it).
 diff -aur a/examples++-mpi/Makefile.in b/examples++-mpi/Makefile.in
---- a/examples++-mpi/Makefile.in	2013-10-02 02:48:33.935640478 -0400
-+++ b/examples++-mpi/Makefile.in	2013-10-02 02:48:45.192307610 -0400
+--- a/examples++-mpi/Makefile.in	2013-09-05 04:53:51.000000000 -0400
++++ b/examples++-mpi/Makefile.in	2013-10-02 13:44:20.410271282 -0400
 @@ -1130,12 +1130,12 @@
  	../examples++-load/ff-c++ -auto -mpi $<
  
@@ -66,8 +80,8 @@ diff -aur a/examples++-mpi/Makefile.in b/examples++-mpi/Makefile.in
  freefem++.pref:Makefile
  	echo loadpath = \"../examples++-load/\" >freefem++.pref
 diff -aur a/examples++-tutorial/Makefile.in b/examples++-tutorial/Makefile.in
---- a/examples++-tutorial/Makefile.in	2013-10-02 02:48:33.995640479 -0400
-+++ b/examples++-tutorial/Makefile.in	2013-10-02 02:48:45.202307612 -0400
+--- a/examples++-tutorial/Makefile.in	2013-09-05 04:53:52.000000000 -0400
++++ b/examples++-tutorial/Makefile.in	2013-10-02 13:44:20.410271282 -0400
 @@ -1327,8 +1327,8 @@
  Ref: makeref.edp freefem++.pref
  	../src/nw/FreeFem++-nw makeref.edp
