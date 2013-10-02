@@ -1,0 +1,27 @@
+# Contributor: Jed Brown <jed@59A2.org>
+
+pkgname=parmetis
+pkgver=4.0.3
+pkgrel=1
+pkgdesc="A parallel graph partitioning library"
+url="http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview"
+arch=('i686' 'x86_64')
+license="custom"
+depends=('metis' 'openmpi')
+makedepends=('cmake')
+install="$pkgname.install"
+source=("http://glaros.dtc.umn.edu/gkhome/fetch/sw/parmetis/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('f2d9a231b7cf97f1fee6e8c9663113ebf6c240d407d3c118c55b3633d6be6e5f')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make config cc=mpicc shared=1 prefix=/usr
+  make
+}
+
+package () {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make install DESTDIR=$pkgdir
+}

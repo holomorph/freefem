@@ -19,6 +19,9 @@ sha256sums=('dd83f7958689db158ad6606e9126a7a74c6757d4b49c92628a82c24867c799c2'
 prepare() {
   cd "$pkgname-$pkgver"
 
+  # correct metis.h location
+  ed -s configure <<< $',s/metis\///g\nw'
+
   # correct superlu headers
   ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_ddefs.h"/<superlu\/slu_ddefs.h>/g\nw'
   ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_zdefs.h"/<superlu\/slu_zdefs.h>/g\nw'
