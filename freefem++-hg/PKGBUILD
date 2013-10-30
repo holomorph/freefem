@@ -1,0 +1,77 @@
+# $Id$
+
+pkgname=freefem++-hg
+pkgver=2775+da720285cc20
+pkgrel=1
+pkgdesc='A PDE oriented language using the finite element method (Mercurial)'
+arch=('i686' 'x86_64')
+url="http://www.freefem.org/ff++/index.htm"
+license=('LGPL')
+depends=('arpack' 'fftw' 'freeglut' 'suitesparse')
+makedepends=('ed' 'mercurial' 'gcc-fortran')
+provides=('freefem++')
+conflicts=('freefem++')
+backup=('etc/freefem++.pref')
+source=('hg+http://www.freefem.org/ff++/ff++'
+        'disable-doc.patch'
+        'configure-dirs.patch')
+sha256sums=('SKIP'
+            '4e01551ae3f06a34816c6e87d0b2a3636096072bc51a3e8a1e05542577e10e60'
+            'ec372e40cd0cf837deee55b87a4c662ee1e79031ec90e8e57a4f2606eb437287')
+
+pkgver() {
+  cd 'ff++'
+
+  echo "$(hg identify -n)+$(hg identify -i)"
+}
+
+prepare() {
+  cd 'ff++'
+
+  # correct metis.h location
+  ed -s configure <<< $',s/metis\///g\nw'
+
+  # correct superlu headers
+  ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_ddefs.h"/<superlu\/slu_ddefs.h>/g\nw'
+  ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_zdefs.h"/<superlu\/slu_zdefs.h>/g\nw'
+  ed -s examples++-load/SuperLu.cpp <<< $',s/"superlu_enum_consts.h"/<superlu\/superlu_enum_consts.h>/g\nw'
+
+  # disable doc
+  patch -p1 < "$srcdir/disable-doc.patch"
+
+  # control install locations with ./configure
+  patch -p1 < "$srcdir/configure-dirs.patch"
+}
+
+build() {
+  cd 'ff++'
+
+  autoreconf -i
+
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --with-umfpack="-lumfpack -lsuitesparseconfig -lcholmod -lcolamd"
+
+  make
+}
+
+# check() {
+#   cd 'ff++'
+#   # Some tests fail. See README_HG
+#   make check
+# }
+
+package() {
+  cd 'ff++'
+
+  make DESTDIR="$pkgdir" install
+
+  # remove unneeded stuff
+  rm -f $pkgdir/usr/share/freefem++/INSTALL*
+  rm -f $pkgdir/usr/share/freefem++/README_*
+  rm -f $pkgdir/usr/share/freefem++/mode-mi-edp.zip
+  rm -rf $pkgdir/usr/share/freefem++/download
+}
+
+# vim: ts=2 sw=2 et
