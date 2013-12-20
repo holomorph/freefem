@@ -1,13 +1,13 @@
 # $Id$
 
 pkgname=freefem++-hg
-pkgver=2775+da720285cc20
+pkgver=2864+b110654707d1
 pkgrel=1
 pkgdesc='A PDE oriented language using the finite element method (Mercurial)'
 arch=('i686' 'x86_64')
 url="http://www.freefem.org/ff++/index.htm"
 license=('LGPL')
-depends=('arpack' 'fftw' 'freeglut' 'suitesparse')
+depends=('arpack' 'fftw' 'freeglut' 'glu' 'suitesparse')
 makedepends=('ed' 'mercurial' 'gcc-fortran')
 provides=('freefem++')
 conflicts=('freefem++')
@@ -17,7 +17,7 @@ source=('hg+http://www.freefem.org/ff++/ff++'
         'configure-dirs.patch')
 sha256sums=('SKIP'
             '4e01551ae3f06a34816c6e87d0b2a3636096072bc51a3e8a1e05542577e10e60'
-            'ec372e40cd0cf837deee55b87a4c662ee1e79031ec90e8e57a4f2606eb437287')
+            '22c2871804c6d504d893dbb8ce0fe66016fdad879b316ae3219b1e89d67edb1e')
 
 pkgver() {
   cd 'ff++'
@@ -27,6 +27,8 @@ pkgver() {
 
 prepare() {
   cd 'ff++'
+
+  autoreconf -i
 
   # correct metis.h location
   ed -s configure <<< $',s/metis\///g\nw'
@@ -45,8 +47,6 @@ prepare() {
 
 build() {
   cd 'ff++'
-
-  autoreconf -i
 
   ./configure \
     --prefix=/usr \
