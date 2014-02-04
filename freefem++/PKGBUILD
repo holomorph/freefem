@@ -3,7 +3,7 @@
 # Contributor: 'lazork'
 
 pkgname=freefem++
-pkgver=3.26
+pkgver=3.27
 pkgrel=1
 pkgdesc="A PDE oriented language using the finite element method"
 arch=('i686' 'x86_64')
@@ -12,12 +12,13 @@ license=('LGPL')
 depends=('arpack' 'fftw' 'freeglut' 'glu' 'suitesparse')
 makedepends=('ed' 'gcc-fortran')
 backup=('etc/freefem++.pref')
+options=('staticlibs')
 source=("http://www.freefem.org/ff++/ftp/${pkgname}-${pkgver}.tar.gz"
         'disable-doc.patch'
         'configure-dirs.patch')
-sha256sums=('a0528c3847852ecc6e10e3b38e321d55f17702292ce7b8c3fb783e6cd357c120'
+sha256sums=('0f49430025e17b5a7341b04c88461f5b7068ce0176714000fcd3be7242662536'
             '19ba064469b9c38278fa1e396c0bcd1bb5d067a18eeaef980c86aff599881fdb'
-            '3e71a84310be143e0edf845b5f5f62f762e1e769c414acbcafadeb4a803856b2')
+            '6ddf4fd23390862707d3c0ce18fef937004a4e461ae7044ec940ceaff2616cea')
 
 prepare() {
   cd "$pkgname-$pkgver"

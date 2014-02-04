@@ -1,7 +1,7 @@
 diff -aur a/Makefile.in b/Makefile.in
---- a/Makefile.in	2013-09-05 04:53:50.000000000 -0400
-+++ b/Makefile.in	2013-10-02 13:44:20.406937949 -0400
-@@ -1034,8 +1034,8 @@
+--- a/Makefile.in	2014-01-24 16:17:31.000000000 -0500
++++ b/Makefile.in	2014-02-03 17:00:43.341610665 -0500
+@@ -1044,8 +1044,8 @@
  # Native MacOS packaging
  # ----------------------
  install-exec-local:: 
@@ -12,10 +12,32 @@ diff -aur a/Makefile.in b/Makefile.in
  	$(mkinstalldirs) -m 755 $(DESTDIR)${bindir}
  	-test `uname` = Darwin && $(INSTALL_SCRIPT) FreeFem++-CoCoa  $(DESTDIR)${bindir}
  
+diff -aur a/download/Makefile.in b/download/Makefile.in
+--- a/download/Makefile.in	2014-01-24 16:17:31.000000000 -0500
++++ b/download/Makefile.in	2014-02-03 17:04:19.688283901 -0500
+@@ -853,12 +853,12 @@
+ WHERE:
+ 	$(MAKE) compile-pkg DIRTARGET=WHERE
+ install-exec-local:	
+-	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/lib
+-	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/bin
+-	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/include
+-	cp -rp lib $(DESTDIR)$(ff_prefix_dir)
+-	cp -rp include  $(DESTDIR)$(ff_prefix_dir)
+-	cp -rp bin  $(DESTDIR)$(ff_prefix_dir)
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(bindir)
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
++	cp -rp lib/* $(DESTDIR)$(libdir)/freefem++
++	cp -rp include/* $(DESTDIR)$(includedir)/freefem++
++	cp -rp bin/* $(DESTDIR)$(bindir)
+ 
+ clean-local:
+ 	-rm -rf	 tag-* include lib bin 
 diff -aur a/examples++-3d/Makefile.in b/examples++-3d/Makefile.in
---- a/examples++-3d/Makefile.in	2013-09-05 04:53:51.000000000 -0400
-+++ b/examples++-3d/Makefile.in	2013-10-02 13:44:20.406937949 -0400
-@@ -1152,8 +1152,8 @@
+--- a/examples++-3d/Makefile.in	2014-01-24 16:17:32.000000000 -0500
++++ b/examples++-3d/Makefile.in	2014-02-03 17:00:43.341610665 -0500
+@@ -1156,8 +1156,8 @@
  	echo loadpath += \"./\" >>freefem++.pref
  3d-Leman.edp:freefem++.pref
  install-exec-local:: 
@@ -27,25 +49,31 @@ diff -aur a/examples++-3d/Makefile.in b/examples++-3d/Makefile.in
  # To check the scripts against their reference values
  regtests.edp: regtests.m4 ../regtests.m4
 diff -aur a/examples++-load/Makefile.in b/examples++-load/Makefile.in
---- a/examples++-load/Makefile.in	2013-09-05 04:53:51.000000000 -0400
-+++ b/examples++-load/Makefile.in	2013-10-02 13:44:20.406937949 -0400
-@@ -1706,19 +1706,19 @@
+--- a/examples++-load/Makefile.in	2014-01-24 16:17:33.000000000 -0500
++++ b/examples++-load/Makefile.in	2014-02-03 17:00:43.341610665 -0500
+@@ -1713,23 +1713,23 @@
  freefem++.pref:
  	echo loadpath = \"./\" >freefem++.pref
- install-exec-local:: load_compile
+ install-exec-local:: load_compile WHERE_LIBRARY
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/lib
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/include
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/etc
 -	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(ff_prefix_dir)/include
 -	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(ff_prefix_dir)/lib
--	echo loadpath += \"./\"  >$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
--	echo loadpath += \"$(ff_prefix_dir)/lib\"  >>$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
--	echo includepath += \"$(ff_prefix_dir)/idp\"  >>$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
+-	$(INSTALL)  -m 555 WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(ff_prefix_dir)/lib
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(sysconfdir)
 +	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(includedir)/freefem++
 +	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(libdir)/freefem++
++	$(INSTALL)  -m 555 WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(libdir)/freefem++
+ 	for i in  WHERE_LIBRARY-config WHERE_LIBRARY WHERE_LIBRARY-download; do \
+-	  sed <$$i >$(DESTDIR)$(ff_prefix_dir)/lib/$$i 's#$(abs_top_builddir)/download#$(ff_prefix_dir)#' ;\
++	  sed <$$i >$(DESTDIR)$(libdir)/freefem++/$$i 's#$(abs_top_builddir)/download#$(ff_prefix_dir)#' ;\
+ 	 done
+-	echo loadpath += \"./\"  >$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
+-	echo loadpath += \"$(ff_prefix_dir)/lib\"  >>$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
+-	echo includepath += \"$(ff_prefix_dir)/idp\"  >>$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
 +	echo loadpath += \"./\"  >$(DESTDIR)$(sysconfdir)/freefem++.pref
 +	echo loadpath += \"$(libdir)/freefem++\"  >>$(DESTDIR)$(sysconfdir)/freefem++.pref
 +	echo includepath += \"$(libdir)/freefem++/idp\"  >>$(DESTDIR)$(sysconfdir)/freefem++.pref
@@ -59,9 +87,9 @@ diff -aur a/examples++-load/Makefile.in b/examples++-load/Makefile.in
  # FFCS: add tags for files that are not specified to automake by a SOURCE directive (this tags file is automatically
  # taken into account by automake when it sees it).
 diff -aur a/examples++-mpi/Makefile.in b/examples++-mpi/Makefile.in
---- a/examples++-mpi/Makefile.in	2013-09-05 04:53:51.000000000 -0400
-+++ b/examples++-mpi/Makefile.in	2013-10-02 13:44:20.410271282 -0400
-@@ -1130,12 +1130,12 @@
+--- a/examples++-mpi/Makefile.in	2014-01-24 16:17:33.000000000 -0500
++++ b/examples++-mpi/Makefile.in	2014-02-03 17:00:43.341610665 -0500
+@@ -1161,12 +1161,12 @@
  	../examples++-load/ff-c++ -auto -mpi $<
  
  install-exec-local:: 
@@ -80,9 +108,9 @@ diff -aur a/examples++-mpi/Makefile.in b/examples++-mpi/Makefile.in
  freefem++.pref:Makefile
  	echo loadpath = \"../examples++-load/\" >freefem++.pref
 diff -aur a/examples++-tutorial/Makefile.in b/examples++-tutorial/Makefile.in
---- a/examples++-tutorial/Makefile.in	2013-09-05 04:53:52.000000000 -0400
-+++ b/examples++-tutorial/Makefile.in	2013-10-02 13:44:20.410271282 -0400
-@@ -1327,8 +1327,8 @@
+--- a/examples++-tutorial/Makefile.in	2014-01-24 16:17:33.000000000 -0500
++++ b/examples++-tutorial/Makefile.in	2014-02-03 17:00:43.341610665 -0500
+@@ -1331,8 +1331,8 @@
  Ref: makeref.edp freefem++.pref
  	../src/nw/FreeFem++-nw makeref.edp
  install-exec-local:: 
