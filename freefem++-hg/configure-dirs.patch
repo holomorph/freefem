@@ -1,6 +1,6 @@
-diff -r b110654707d1 Makefile.am
---- a/Makefile.am	Mon Dec 09 21:34:15 2013 +0100
-+++ b/Makefile.am	Fri Dec 20 02:51:36 2013 -0500
+diff -r cba75b251d6d Makefile.am
+--- a/Makefile.am	Thu Feb 13 10:55:31 2014 +0100
++++ b/Makefile.am	Fri Feb 28 17:58:33 2014 -0500
 @@ -158,8 +158,8 @@
  # Native MacOS packaging
  # ----------------------
@@ -12,23 +12,45 @@ diff -r b110654707d1 Makefile.am
  	$(mkinstalldirs) -m 755 $(DESTDIR)${bindir}
  	-test `uname` = Darwin && $(INSTALL_SCRIPT) FreeFem++-CoCoa  $(DESTDIR)${bindir}
  
-diff -r b110654707d1 examples++-3d/Makefile.am
---- a/examples++-3d/Makefile.am	Mon Dec 09 21:34:15 2013 +0100
-+++ b/examples++-3d/Makefile.am	Fri Dec 20 02:51:36 2013 -0500
+diff -r cba75b251d6d download/Makefile.am
+--- a/download/Makefile.am	Thu Feb 13 10:55:31 2014 +0100
++++ b/download/Makefile.am	Fri Feb 28 17:58:33 2014 -0500
+@@ -153,12 +153,12 @@
+ WHERE:
+ 	$(MAKE) compile-pkg DIRTARGET=WHERE
+ install-exec-local:	
+-	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/lib
+-	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/bin
+-	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/include
+-	cp -rp lib $(DESTDIR)$(ff_prefix_dir)
+-	cp -rp include  $(DESTDIR)$(ff_prefix_dir)
+-	cp -rp bin  $(DESTDIR)$(ff_prefix_dir)
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(bindir)
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
++	cp -rp lib/* $(DESTDIR)$(libdir)/freefem++/$(VERSION)
++	cp -rp include/*  $(DESTDIR)$(includedir)/freefem++
++	cp -rp bin/*  $(DESTDIR)$(bindir)
+ 
+ clean-local:
+ 	-rm -rf	 tag-* include lib bin 
+diff -r cba75b251d6d examples++-3d/Makefile.am
+--- a/examples++-3d/Makefile.am	Thu Feb 13 10:55:31 2014 +0100
++++ b/examples++-3d/Makefile.am	Fri Feb 28 17:58:33 2014 -0500
 @@ -35,8 +35,8 @@
  	echo loadpath += \"./\" >>freefem++.pref
  3d-Leman.edp:freefem++.pref
  install-exec-local:: 
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/idp
 -	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(ff_prefix_dir)/idp
-+	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/idp
-+	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(libdir)/freefem++/idp
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)/idp
++	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(libdir)/freefem++/$(VERSION)/idp
  
  
  
-diff -r b110654707d1 examples++-load/Makefile.am
---- a/examples++-load/Makefile.am	Mon Dec 09 21:34:15 2013 +0100
-+++ b/examples++-load/Makefile.am	Fri Dec 20 02:51:36 2013 -0500
+diff -r cba75b251d6d examples++-load/Makefile.am
+--- a/examples++-load/Makefile.am	Thu Feb 13 10:55:31 2014 +0100
++++ b/examples++-load/Makefile.am	Fri Feb 28 17:58:33 2014 -0500
 @@ -195,24 +195,24 @@
  freefem++.pref:
  	echo loadpath = \"./\" >freefem++.pref
@@ -39,35 +61,63 @@ diff -r b110654707d1 examples++-load/Makefile.am
 -	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(ff_prefix_dir)/include
 -	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(ff_prefix_dir)/lib
 -	$(INSTALL)  -m 555 WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(ff_prefix_dir)/lib
-+	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(sysconfdir)
 +	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(includedir)/freefem++
-+	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(libdir)/freefem++
-+	$(INSTALL)  -m 555 WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(libdir)/freefem++
++	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(libdir)/freefem++/$(VERSION)
++	$(INSTALL)  -m 555 WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(libdir)/freefem++/$(VERSION)
  	for i in  WHERE_LIBRARY-config WHERE_LIBRARY WHERE_LIBRARY-download; do \
 -	  sed <$$i >$(DESTDIR)$(ff_prefix_dir)/lib/$$i 's#$(abs_top_builddir)/download#$(ff_prefix_dir)#' ;\
-+	  sed <$$i >$(DESTDIR)$(libdir)/freefem++/$$i 's#$(abs_top_builddir)/download#$(prefix)#' ;\
++	  sed <$$i >$(DESTDIR)$(libdir)/freefem++/$(VERSION)/$$i 's#$(abs_top_builddir)/download#$(libdir)#' ;\
  	 done
 -	echo loadpath += \"./\"  >$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
 -	echo loadpath += \"$(ff_prefix_dir)/lib\"  >>$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
 -	echo includepath += \"$(ff_prefix_dir)/idp\"  >>$(DESTDIR)$(ff_prefix_dir)/etc/freefem++.pref
 +	echo loadpath += \"./\"  >$(DESTDIR)$(sysconfdir)/freefem++.pref
-+	echo loadpath += \"$(libdir)/freefem++\"  >>$(DESTDIR)$(sysconfdir)/freefem++.pref
-+	echo includepath += \"$(libdir)/freefem++/idp\"  >>$(DESTDIR)$(sysconfdir)/freefem++.pref
++	echo loadpath += \"$(libdir)/freefem++/$(VERSION)\"  >>$(DESTDIR)$(sysconfdir)/freefem++.pref
++	echo includepath += \"$(libdir)/freefem++/$(VERSION)/idp\"  >>$(DESTDIR)$(sysconfdir)/freefem++.pref
  	$(INSTALL_SCRIPT) ff-c++  $(DESTDIR)${bindir}
  	$(INSTALL_SCRIPT) ff-pkg-download  $(DESTDIR)${bindir}
  	$(INSTALL_SCRIPT) ff-get-dep  $(DESTDIR)${bindir}
  ##	$(DESTDIR)${bindir}/ff-pkg-download $(DESTDIR) >$(DESTDIR)$(ff_prefix_dir)/lib/WHERE_LIBRARY-download
  	-for i in $(LIST_COMPILE_PKG); do \
 -	 if [ -f $$i ] ; then 	$(INSTALL)  -m 555 $$i $(DESTDIR)$(ff_prefix_dir)/lib; fi; done
-+	 if [ -f $$i ] ; then 	$(INSTALL)  -m 555 $$i $(DESTDIR)$(libdir)/freefem++; fi; done
++	 if [ -f $$i ] ; then 	$(INSTALL)  -m 555 $$i $(DESTDIR)$(libdir)/freefem++/$(VERSION); fi; done
  
  
  
-diff -r b110654707d1 examples++-mpi/Makefile.am
---- a/examples++-mpi/Makefile.am	Mon Dec 09 21:34:15 2013 +0100
-+++ b/examples++-mpi/Makefile.am	Fri Dec 20 02:51:36 2013 -0500
+diff -r cba75b251d6d examples++-load/ff-get-dep.in
+--- a/examples++-load/ff-get-dep.in	Thu Feb 13 10:55:31 2014 +0100
++++ b/examples++-load/ff-get-dep.in	Fri Feb 28 17:58:33 2014 -0500
+@@ -33,8 +33,8 @@
+     dirwhere=.
+ elif [   -f "$dircommand/WHERE_LIBRARY-download" ] ; then
+     dirwhere=$dircommand
+-elif [ -f '@ff_prefix_dir@/lib/WHERE_LIBRARY-download' ] ; then
+-    dirwhere='@ff_prefix_dir@/lib'
++elif [ -f '@libdir@/freefem++/@VERSION@/WHERE_LIBRARY-download' ] ; then
++    dirwhere='@libdir@/freefem++/@VERSION@'
+ else
+    echo " error no WHERE_LIBRARY  file "
+    exit 1;
+diff -r cba75b251d6d examples++-load/load.link.in
+--- a/examples++-load/load.link.in	Thu Feb 13 10:55:31 2014 +0100
++++ b/examples++-load/load.link.in	Fri Feb 28 17:58:33 2014 -0500
+@@ -30,8 +30,8 @@
+ 	INCFF="-Iinclude"
+     elif [ -f "FFAPPLI_INC/freefem++.hpp" ] ; then 
+ 	INCFF="-IFFAPPLI_INC" 
+-    elif [ -f '@ff_prefix_dir@/include/ff++.hpp' ] ; then 
+-	INCFF='-I@ff_prefix_dir@/include' 
++    elif [ -f '@includedir@/freefem++/ff++.hpp' ] ; then 
++	INCFF='-I@includedir@/freefem++' 
+     else
+ 	ff=`which freefem++.exe`;
+ 	ffinc=`dirname "$ff"`/examples++-load/include
+diff -r cba75b251d6d examples++-mpi/Makefile.am
+--- a/examples++-mpi/Makefile.am	Thu Feb 13 10:55:31 2014 +0100
++++ b/examples++-mpi/Makefile.am	Fri Feb 28 17:58:33 2014 -0500
 @@ -84,12 +84,12 @@
  	../examples++-load/ff-c++ -auto -mpi $<
  
@@ -75,28 +125,28 @@ diff -r b110654707d1 examples++-mpi/Makefile.am
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/lib
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/include
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/etc
-+	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(sysconfdir)
  	-for i in $(LIST_COMPILE); do \
 -	 if [ -f $$i ] ; then 	$(INSTALL)  -m 555 $$i $(DESTDIR)$(ff_prefix_dir)/lib; fi; done
 -	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(ff_prefix_dir)/idp
-+	 if [ -f $$i ] ; then 	$(INSTALL)  -m 555 $$i $(DESTDIR)$(libdir)/freefem++; fi; done
-+	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(libdir)/freefem++/idp
++	 if [ -f $$i ] ; then 	$(INSTALL)  -m 555 $$i $(DESTDIR)$(libdir)/freefem++/$(VERSION); fi; done
++	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(libdir)/freefem++/$(VERSION)/idp
  
  
  freefem++.pref:Makefile
-diff -r b110654707d1 examples++-tutorial/Makefile.am
---- a/examples++-tutorial/Makefile.am	Mon Dec 09 21:34:15 2013 +0100
-+++ b/examples++-tutorial/Makefile.am	Fri Dec 20 02:51:36 2013 -0500
+diff -r cba75b251d6d examples++-tutorial/Makefile.am
+--- a/examples++-tutorial/Makefile.am	Thu Feb 13 10:55:31 2014 +0100
++++ b/examples++-tutorial/Makefile.am	Fri Feb 28 17:58:33 2014 -0500
 @@ -22,8 +22,8 @@
  Ref: makeref.edp freefem++.pref
  	../src/nw/FreeFem++-nw makeref.edp
  install-exec-local:: 
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/idp
 -	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(ff_prefix_dir)/idp
-+	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/idp
-+	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(libdir)/freefem++/idp
++	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)/idp
++	$(INSTALL)  -m 555  $(LIST_IDP)  $(DESTDIR)$(libdir)/freefem++/$(VERSION)/idp
  
  
  makeref.edp: regtests.m4 ../regtests.m4

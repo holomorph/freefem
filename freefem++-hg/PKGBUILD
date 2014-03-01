@@ -1,7 +1,7 @@
 # $Id$
 
 pkgname=freefem++-hg
-pkgver=2864+b110654707d1
+pkgver=0+2950+cba75b251d6d
 pkgrel=1
 pkgdesc='A PDE oriented language using the finite element method (Mercurial)'
 arch=('i686' 'x86_64')
@@ -17,16 +17,22 @@ source=('hg+http://www.freefem.org/ff++/ff++'
         'configure-dirs.patch')
 sha256sums=('SKIP'
             '4e01551ae3f06a34816c6e87d0b2a3636096072bc51a3e8a1e05542577e10e60'
-            '22c2871804c6d504d893dbb8ce0fe66016fdad879b316ae3219b1e89d67edb1e')
+            '9995ca8e75f5918f184403d11869813bc23894644877ae00e9b36d4843a84086')
 
 pkgver() {
   cd 'ff++'
 
-  echo "$(hg identify -n)+$(hg identify -i)"
+  echo "0+$(hg identify -n)+$(hg identify -i)"
 }
 
 prepare() {
   cd 'ff++'
+
+  # disable doc
+  patch -p1 < "$srcdir/disable-doc.patch"
+
+  # control install locations with ./configure
+  patch -p1 < "$srcdir/configure-dirs.patch"
 
   autoreconf -i
 
@@ -37,12 +43,6 @@ prepare() {
   ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_ddefs.h"/<superlu\/slu_ddefs.h>/g\nw'
   ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_zdefs.h"/<superlu\/slu_zdefs.h>/g\nw'
   ed -s examples++-load/SuperLu.cpp <<< $',s/"superlu_enum_consts.h"/<superlu\/superlu_enum_consts.h>/g\nw'
-
-  # disable doc
-  patch -p1 < "$srcdir/disable-doc.patch"
-
-  # control install locations with ./configure
-  patch -p1 < "$srcdir/configure-dirs.patch"
 }
 
 build() {
