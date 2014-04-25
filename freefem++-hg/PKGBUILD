@@ -1,7 +1,7 @@
 # $Id$
 
 pkgname=freefem++-hg
-pkgver=0+2950+cba75b251d6d
+pkgver=3.30+14+bdf2b6da5050
 pkgrel=1
 pkgdesc='A PDE oriented language using the finite element method (Mercurial)'
 arch=('i686' 'x86_64')
@@ -17,12 +17,19 @@ source=('hg+http://www.freefem.org/ff++/ff++'
         'configure-dirs.patch')
 sha256sums=('SKIP'
             '4e01551ae3f06a34816c6e87d0b2a3636096072bc51a3e8a1e05542577e10e60'
-            '9995ca8e75f5918f184403d11869813bc23894644877ae00e9b36d4843a84086')
+            'c760a540447e08672b1e30174c27a7cebb4f8fbcee8eb8032ed219009e98303d')
 
 pkgver() {
   cd 'ff++'
 
-  echo "0+$(hg identify -n)+$(hg identify -i)"
+  # 2937 v3.27
+  # 2944 v3.28
+  # 2960 v3.29
+  # 2999 v3.30
+
+  # make the tag and refer to the changeset prior to the tag
+  hg tag -r2999 3.30
+  hg log -r-2 --template "{sub('-', '.', latesttag)}+{latesttagdistance}+{node|short}"
 }
 
 prepare() {
@@ -34,10 +41,14 @@ prepare() {
   # control install locations with ./configure
   patch -p1 < "$srcdir/configure-dirs.patch"
 
-  autoreconf -i
+  # enable subdirs (exacerbates issue with eigenvalue.o)
+  # patch -p1 < "$srcdir/subdirs.patch"
+
+  # no download pls
+  ed -s Makefile.am <<< $'9s/download//\nw'
 
   # correct metis.h location
-  ed -s configure <<< $',s/metis\///g\nw'
+  ed -s configure.ac <<< $',s/metis\///g\nw'
 
   # correct superlu headers
   ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_ddefs.h"/<superlu\/slu_ddefs.h>/g\nw'
@@ -47,6 +58,8 @@ prepare() {
 
 build() {
   cd 'ff++'
+
+  autoreconf -vi
 
   ./configure \
     --prefix=/usr \
@@ -68,10 +81,10 @@ package() {
   make DESTDIR="$pkgdir" install
 
   # remove unneeded stuff
-  rm -f $pkgdir/usr/share/freefem++/INSTALL*
-  rm -f $pkgdir/usr/share/freefem++/README_*
-  rm -f $pkgdir/usr/share/freefem++/mode-mi-edp.zip
-  rm -rf $pkgdir/usr/share/freefem++/download
+  rm -f $pkgdir/usr/share/freefem++/3.30/INSTALL*
+  rm -f $pkgdir/usr/share/freefem++/3.30/README_*
+  rm -f $pkgdir/usr/share/freefem++/3.30/mode-mi-edp.zip
+  rm -rf $pkgdir/usr/share/freefem++/3.30/download
 }
 
 # vim: ts=2 sw=2 et

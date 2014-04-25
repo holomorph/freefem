@@ -1,17 +1,3 @@
-diff -r cba75b251d6d Makefile.am
---- a/Makefile.am	Thu Feb 13 10:55:31 2014 +0100
-+++ b/Makefile.am	Fri Feb 28 17:58:33 2014 -0500
-@@ -158,8 +158,8 @@
- # Native MacOS packaging
- # ----------------------
- install-exec-local:: 
--	$(mkinstalldirs) -m 755 $(DESTDIR)$(pkgdatadir)/$(VERSION)
--	tar cvf - $(FF_EXAMPLES_FILES)| (cd $(DESTDIR)$(pkgdatadir)/$(VERSION); tar xvf -)
-+	$(mkinstalldirs) -m 755 $(DESTDIR)$(pkgdatadir)
-+	tar cvf - $(FF_EXAMPLES_FILES)| (cd $(DESTDIR)$(pkgdatadir); tar xvf -)
- 	$(mkinstalldirs) -m 755 $(DESTDIR)${bindir}
- 	-test `uname` = Darwin && $(INSTALL_SCRIPT) FreeFem++-CoCoa  $(DESTDIR)${bindir}
- 
 diff -r cba75b251d6d download/Makefile.am
 --- a/download/Makefile.am	Thu Feb 13 10:55:31 2014 +0100
 +++ b/download/Makefile.am	Fri Feb 28 17:58:33 2014 -0500
