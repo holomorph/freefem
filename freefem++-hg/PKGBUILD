@@ -1,7 +1,7 @@
 # $Id$
 
 pkgname=freefem++-hg
-pkgver=3.30+14+bdf2b6da5050
+pkgver=3.31+1+794839c2a7cd
 pkgrel=1
 pkgdesc='A PDE oriented language using the finite element method (Mercurial)'
 arch=('i686' 'x86_64')
@@ -26,9 +26,10 @@ pkgver() {
   # 2944 v3.28
   # 2960 v3.29
   # 2999 v3.30
+  # 3036 v3.30
 
   # make the tag and refer to the changeset prior to the tag
-  hg tag -r2999 3.30
+  hg tag -r3036 3.31
   hg log -r-2 --template "{sub('-', '.', latesttag)}+{latesttagdistance}+{node|short}"
 }
 
@@ -81,10 +82,10 @@ package() {
   make DESTDIR="$pkgdir" install
 
   # remove unneeded stuff
-  rm -f $pkgdir/usr/share/freefem++/3.30/INSTALL*
-  rm -f $pkgdir/usr/share/freefem++/3.30/README_*
-  rm -f $pkgdir/usr/share/freefem++/3.30/mode-mi-edp.zip
-  rm -rf $pkgdir/usr/share/freefem++/3.30/download
+  rm -f $pkgdir/usr/share/freefem++/3.31/INSTALL*
+  rm -f $pkgdir/usr/share/freefem++/3.31/README_*
+  rm -f $pkgdir/usr/share/freefem++/3.31/mode-mi-edp.zip
+  rm -rf $pkgdir/usr/share/freefem++/3.31/download
 }
 
 # vim: ts=2 sw=2 et
