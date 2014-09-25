@@ -3,7 +3,7 @@
 # Contributor: 'lazork'
 
 pkgname=freefem++
-pkgver=3.31
+pkgver=3.31+3
 pkgrel=1
 pkgdesc="A PDE oriented language using the finite element method"
 arch=('i686' 'x86_64')
@@ -13,33 +13,33 @@ depends=('arpack' 'fftw' 'freeglut' 'glu' 'suitesparse')
 makedepends=('ed' 'gcc-fortran')
 backup=('etc/freefem++.pref')
 options=('staticlibs')
-source=("http://www.freefem.org/ff++/ftp/${pkgname}-${pkgver}.tar.gz"
+source=("http://www.freefem.org/ff++/ftp/$pkgname-${pkgver//+/-}.tar.gz"
         'disable-doc.patch'
-        'configure-dirs.patch')
-sha256sums=('4eb36abbdd25e438d6c80beaa5e18d9e70b6774eafe484e8baf56412ea3b30a4'
+        'configure-dirs.patch'
+        'umfpack.patch')
+sha256sums=('1e915c58b2cf205274ea56730444448a89ba5a75bd51a91458d04ef77b929763'
             '19ba064469b9c38278fa1e396c0bcd1bb5d067a18eeaef980c86aff599881fdb'
-            '6ddf4fd23390862707d3c0ce18fef937004a4e461ae7044ec940ceaff2616cea')
+            '6ddf4fd23390862707d3c0ce18fef937004a4e461ae7044ec940ceaff2616cea'
+            'b097abbf87b15404416b473ccbcf6aa2054064ce6258db9340a36c34024d1346')
 
 prepare() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname-${pkgver//+/-}"
 
-  # correct metis.h location
-  ed -s configure <<< $',s/metis\///g\nw'
-
-  # correct superlu headers
-  ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_ddefs.h"/<superlu\/slu_ddefs.h>/g\nw'
-  ed -s examples++-load/SuperLu.cpp <<< $',s/"slu_zdefs.h"/<superlu\/slu_zdefs.h>/g\nw'
-  ed -s examples++-load/SuperLu.cpp <<< $',s/"superlu_enum_consts.h"/<superlu\/superlu_enum_consts.h>/g\nw'
+  # no download pls
+  ed -v Makefile.in <<< $'434s/download//\nw'
 
   # disable doc
-  patch -p1 < "$srcdir/disable-doc.patch"
+  patch -p1 < ../disable-doc.patch
 
   # control install locations with ./configure
-  patch -p1 < "$srcdir/configure-dirs.patch"
+  patch -p1 < ../configure-dirs.patch
+
+  # correct headers
+  patch -p1 < ../umfpack.patch
 }
 
 build() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname-${pkgver//+/-}"
 
   ./configure \
     --prefix=/usr \
@@ -50,7 +50,7 @@ build() {
 }
 
 package() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname-${pkgver//+/-}"
 
   make DESTDIR="$pkgdir" install
 
@@ -60,5 +60,3 @@ package() {
   rm -f $pkgdir/usr/share/$pkgname/mode-mi-edp.zip
   rm -rf $pkgdir/usr/share/$pkgname/download
 }
-
-# vim: ts=2 sw=2 et
