@@ -3,7 +3,7 @@
 # Contributor: 'lazork'
 
 pkgname=freefem++
-pkgver=3.31+3
+pkgver=3.32+1
 pkgrel=1
 pkgdesc="A PDE oriented language using the finite element method"
 arch=('i686' 'x86_64')
@@ -17,16 +17,16 @@ source=("http://www.freefem.org/ff++/ftp/$pkgname-${pkgver//+/-}.tar.gz"
         'disable-doc.patch'
         'configure-dirs.patch'
         'umfpack.patch')
-sha256sums=('1e915c58b2cf205274ea56730444448a89ba5a75bd51a91458d04ef77b929763'
+sha256sums=('cd75a7413cbda48eb190d42eacc8b3914e2fcd0f404f484e572b09d6ee7efe19'
             '19ba064469b9c38278fa1e396c0bcd1bb5d067a18eeaef980c86aff599881fdb'
-            '6ddf4fd23390862707d3c0ce18fef937004a4e461ae7044ec940ceaff2616cea'
+            '6078d7d6cadddbc657c7f08f14979bcfefa7c212229476f81be9cfb7b86aa248'
             'b097abbf87b15404416b473ccbcf6aa2054064ce6258db9340a36c34024d1346')
 
 prepare() {
   cd "$pkgname-${pkgver//+/-}"
 
   # no download pls
-  ed -v Makefile.in <<< $'434s/download//\nw'
+  ed -v Makefile.in <<< $',s/SUBDIRS\ =\ download/SUBDIRS\ =\ /\nw'
 
   # disable doc
   patch -p1 < ../disable-doc.patch
@@ -35,7 +35,7 @@ prepare() {
   patch -p1 < ../configure-dirs.patch
 
   # correct headers
-  patch -p1 < ../umfpack.patch
+  # patch -p1 < ../umfpack.patch
 }
 
 build() {
@@ -55,8 +55,8 @@ package() {
   make DESTDIR="$pkgdir" install
 
   # remove unneeded stuff
-  rm -f $pkgdir/usr/share/$pkgname/INSTALL*
-  rm -f $pkgdir/usr/share/$pkgname/README_*
-  rm -f $pkgdir/usr/share/$pkgname/mode-mi-edp.zip
-  rm -rf $pkgdir/usr/share/$pkgname/download
+  rm -f "$pkgdir"/usr/share/"$pkgname/${pkgver//+/-}"/INSTALL*
+  rm -f "$pkgdir"/usr/share/"$pkgname/${pkgver//+/-}"/README_*
+  rm -f "$pkgdir"/usr/share/"$pkgname/${pkgver//+/-}"/mode-mi-edp.zip
+  rm -rf "$pkgdir"/usr/share/"$pkgname/${pkgver//+/-}"/download
 }
