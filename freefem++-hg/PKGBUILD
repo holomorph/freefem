@@ -1,7 +1,7 @@
 # $Id$
 
 pkgname=freefem++-hg
-pkgver=3.31+33+828f65161d32
+pkgver=3.32+21+fa4384bf86b4
 pkgrel=1
 pkgdesc='A PDE oriented language using the finite element method (Mercurial)'
 arch=('i686' 'x86_64')
@@ -15,25 +15,14 @@ backup=('etc/freefem++.pref')
 # options=('!makeflags')
 source=('hg+http://www.freefem.org/ff++/ff++'
         'disable-doc.patch'
-        'configure-dirs.patch'
-        'umfpack.patch')
+        'configure-dirs.patch')
 sha256sums=('SKIP'
             '4e01551ae3f06a34816c6e87d0b2a3636096072bc51a3e8a1e05542577e10e60'
-            'b5893c2a6e63c1cbde31cc1a9db074bae4c9c3aac0f9553f46b2dc93d5e42c25'
-            'b097abbf87b15404416b473ccbcf6aa2054064ce6258db9340a36c34024d1346')
+            'b5893c2a6e63c1cbde31cc1a9db074bae4c9c3aac0f9553f46b2dc93d5e42c25')
 
 pkgver() {
   cd ff++
-
-  # 2937 v3.27
-  # 2944 v3.28
-  # 2960 v3.29
-  # 2999 v3.30
-  # 3036 v3.30
-
-  # make the tag and refer to the changeset prior to the tag
-  hg tag -r3036 3.31
-  hg log -r-2 --template "{sub('-', '.', latesttag)}+{latesttagdistance}+{node|short}"
+  hg log -r. --template "{sub('-', '.', latesttag)}+{latesttagdistance}+{node|short}"
 }
 
 prepare() {
@@ -42,14 +31,8 @@ prepare() {
   # no download pls
   ed -s Makefile.am <<< $'9s/download//\nw'
 
-  # disable doc
-  patch -p1 < ../disable-doc.patch
-
   # control install locations with ./configure
   patch -p1 < ../configure-dirs.patch
-
-  # correct headers
-  patch -p1 < ../umfpack.patch
 }
 
 build() {
