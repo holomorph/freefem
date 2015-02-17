@@ -3,7 +3,7 @@
 # Contributor: 'lazork'
 
 pkgname=freefem++
-pkgver=3.32+1
+pkgver=3.34+1
 pkgrel=1
 pkgdesc="A PDE oriented language using the finite element method"
 arch=('i686' 'x86_64')
@@ -12,14 +12,13 @@ license=('LGPL')
 depends=('arpack' 'fftw' 'freeglut' 'glu' 'suitesparse')
 makedepends=('ed' 'gcc-fortran')
 backup=('etc/freefem++.pref')
-options=('staticlibs')
 source=("http://www.freefem.org/ff++/ftp/$pkgname-${pkgver//+/-}.tar.gz"
         'disable-doc.patch'
         'configure-dirs.patch'
         'umfpack.patch')
-sha256sums=('cd75a7413cbda48eb190d42eacc8b3914e2fcd0f404f484e572b09d6ee7efe19'
+sha256sums=('a7fc76f23866983a42d0997bf75323e8d92f637668e40f7b1b4dc99a8d52bdfd'
             '19ba064469b9c38278fa1e396c0bcd1bb5d067a18eeaef980c86aff599881fdb'
-            '6078d7d6cadddbc657c7f08f14979bcfefa7c212229476f81be9cfb7b86aa248'
+            '531d1b0b112a89f30ef645d5533717cb09dcad6fecb88d73e87efb5514a4ff07'
             'b097abbf87b15404416b473ccbcf6aa2054064ce6258db9340a36c34024d1346')
 
 prepare() {
@@ -44,6 +43,7 @@ build() {
   ./configure \
     --prefix=/usr \
     --sysconfdir=/etc \
+    --enable-silent-rules \
     --with-umfpack="-lumfpack -lsuitesparseconfig -lcholmod -lcolamd"
 
   make

@@ -47,14 +47,14 @@ diff -r ff73fc44ca2d examples++-load/Makefile.in
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/etc
 -	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(ff_prefix_dir)/include
 -	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(ff_prefix_dir)/lib
--	$(INSTALL)  -m 555 WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(ff_prefix_dir)/lib
+-	$(INSTALL)  -m 555 ff-get-dep.awk  WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(ff_prefix_dir)/lib
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)
 +	test -n "$(MPIPROG)" && $(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)/mpi
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(sysconfdir)
 +	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(includedir)/freefem++
 +	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(libdir)/freefem++/$(VERSION)
-+	$(INSTALL)  -m 555 WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(libdir)/freefem++/$(VERSION)
++	$(INSTALL)  -m 555 ff-get-dep.awk  WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(libdir)/freefem++/$(VERSION)
  	for i in  WHERE_LIBRARY-config WHERE_LIBRARY WHERE_LIBRARY-download; do \
 -	  sed <$$i >$(DESTDIR)$(ff_prefix_dir)/lib/$$i 's#$(abs_top_builddir)/download#$(ff_prefix_dir)#' ;\
 +	  sed <$$i >$(DESTDIR)$(libdir)/freefem++/$(VERSION)/$$i 's#$(abs_top_builddir)/download#$(libdir)#' ;\
@@ -67,7 +67,7 @@ diff -r ff73fc44ca2d examples++-load/Makefile.in
 +	echo includepath += \"$(libdir)/freefem++/$(VERSION)/idp\"  >>$(DESTDIR)$(sysconfdir)/freefem++.pref
  	$(INSTALL_SCRIPT) ff-c++  $(DESTDIR)${bindir}
  	$(INSTALL_SCRIPT) ff-pkg-download  $(DESTDIR)${bindir}
- 	$(INSTALL_SCRIPT) ff-get-dep  $(DESTDIR)${bindir}
+ 	$(INSTALL_SCRIPT) ff-get-dep   $(DESTDIR)${bindir}
  	-for i in $(LIST_COMPILE_PKG); do \
 -	 if [ -f $$i ] ; then 	$(INSTALL)  -m 555 $$i $(DESTDIR)$(ff_prefix_dir)/lib; fi; done
 +	 if [ -f $$i ] ; then 	$(INSTALL)  -m 555 $$i $(DESTDIR)$(libdir)/freefem++/$(VERSION); fi; done
