@@ -1,7 +1,7 @@
 # $Id$
 
 pkgname=freefem++-hg
-pkgver=3.32+21+fa4384bf86b4
+pkgver=3.32+103+794d0cf537dd
 pkgrel=1
 pkgdesc='A PDE oriented language using the finite element method (Mercurial)'
 arch=('i686' 'x86_64')
@@ -12,13 +12,10 @@ makedepends=('ed' 'mercurial' 'gcc-fortran')
 provides=('freefem++')
 conflicts=('freefem++')
 backup=('etc/freefem++.pref')
-# options=('!makeflags')
 source=('hg+http://www.freefem.org/ff++/ff++'
-        'disable-doc.patch'
         'configure-dirs.patch')
 sha256sums=('SKIP'
-            '4e01551ae3f06a34816c6e87d0b2a3636096072bc51a3e8a1e05542577e10e60'
-            'b5893c2a6e63c1cbde31cc1a9db074bae4c9c3aac0f9553f46b2dc93d5e42c25')
+            '9b1c62a19472008e2f60958c9c600fe2bea1a54444043a220d5f2840eadb652e')
 
 pkgver() {
   cd ff++
