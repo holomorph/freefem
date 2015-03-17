@@ -1,32 +1,23 @@
-# Contributor: Melancholy_Dream <pb41za@gmail.com>
-
 pkgname=tetgen
 pkgver=1.5.0
-pkgrel=1
-pkgdesc='A quality tetrahedral mesh generator'
+pkgrel=2
+pkgdesc="A Quality Tetrahedral Mesh Generator"
 arch=('i686' 'x86_64')
-url="http://tetgen.org"
+url="http://wias-berlin.de/"
 license=('AGPL3')
 options=('staticlibs')
-source=("http://www.tetgen.org/1.5/src/tetgen1.5.0.tar.gz")
+source=("http://wias-berlin.de/software/tetgen/1.5/src/$pkgname$pkgver.tar.gz")
 sha256sums=('4d114861d5ef2063afd06ef38885ec46822e90e7b4ea38c864f76493451f9cf3')
 
 build() {
   cd "$pkgname$pkgver"
-
-  FFLAGS="-DNDEBUG -mmmx -msse -msse2 -DBAMG_LONG_LONG -DNCHECKPTR -fPIC"
-
-  g++ $FFLAGS -DSELF_CHECK -DTETLIBRARY -c tetgen.cxx
-  g++ $FFLAGS -DSELF_CHECK -DTETLIBRARY -c predicates.cxx
-  ar rv libtet.a tetgen.o predicates.o
-  ranlib libtet.a
+  make
+  make tetlib
 }
 
 package() {
   cd "$pkgname$pkgver"
-
-  install -Dm644 tetgen.h "$pkgdir/usr/include/tetgen.h"
-  install -Dm644 libtet.a "$pkgdir/usr/lib/libtet.a"
+  install -Dm755 tetgen "$pkgdir"/usr/bin/tetgen
+  install -Dm644 libtet.a "$pkgdir"/usr/lib/libtet.a
+  install -Dm644 tetgen.h "$pkgdir"/usr/include/tetgen.h
 }
-
-# vim: ts=2 sw=0 et
