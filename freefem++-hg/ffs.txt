@@ -1,0 +1,10 @@
+/usr/bin/install -c  -m 555 myfunction.so  BernadiRaugel.so Morley.so funcTemplate.so addNewType.so qf11to25.so  Element_P3.so    Element_P4.so Element_P3dc.so    Element_P4dc.so Element_PkEdge.so  msh3.so splitmesh3.so  splitmesh6.so ffrandom.so medit.so mat_dervieux.so lgbmo.so mat_psi.so ppm2rnm.so DxWriter.so pcm2rnm.so  iovtk.so 	 gmsh.so MetricKuate.so Element_P1dc1.so BinaryIO.so isolineP1.so isoline.so  thresholdings.so VTK_writer_3d.so  VTK_writer.so splitedges.so Element_Mixte.so myfunction2.so MetricPk.so FreeFemQA.so shell.so pipe.so symmetrizeCSR.so  BEC.so bfstream.so  ff-AiryBiry.so exactpartition.so  ClosePoints.so aniso.so /tmp/makepkg/freefem++-hg/pkg/freefem++-hg/usr/lib/ff++/3.38/lib
+/usr/bin/install: cannot stat ‘aniso.so’: No such file or directory
+Makefile:1811: recipe for target 'install-exec-local' failed
+make[2]: *** [install-exec-local] Error 1
+make[2]: Leaving directory '/tmp/makepkg/freefem++-hg/src/ff++/examples++-load'
+Makefile:1613: recipe for target 'install-am' failed
+make[1]: *** [install-am] Error 2
+make[1]: Leaving directory '/tmp/makepkg/freefem++-hg/src/ff++/examples++-load'
+Makefile:612: recipe for target 'install-recursive' failed
+make: *** [install-recursive] Error 1

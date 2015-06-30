@@ -1,7 +1,7 @@
 # $Id$
 
 pkgname=freefem++-hg
-pkgver=3.32+103+794d0cf537dd
+pkgver=3.35.dist+93+af6b74e90d77
 pkgrel=1
 pkgdesc='A PDE oriented language using the finite element method (Mercurial)'
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ backup=('etc/freefem++.pref')
 source=('hg+http://www.freefem.org/ff++/ff++'
         'configure-dirs.patch')
 sha256sums=('SKIP'
-            '9b1c62a19472008e2f60958c9c600fe2bea1a54444043a220d5f2840eadb652e')
+            'f0f3274cc17f78f767eaf0db06be0a51c233c95de2421d6012206e401186b419')
 
 pkgver() {
   cd ff++
@@ -40,6 +40,7 @@ build() {
   ./configure \
     --prefix=/usr \
     --sysconfdir=/etc \
+    --enable-silent-rules \
     --with-umfpack="-lumfpack -lsuitesparseconfig -lcholmod -lcolamd -lamd"
 
   make

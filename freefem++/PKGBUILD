@@ -3,7 +3,7 @@
 # Contributor: 'lazork'
 
 pkgname=freefem++
-pkgver=3.35
+pkgver=3.38+1
 pkgrel=1
 pkgdesc="A PDE oriented language using the finite element method"
 arch=('i686' 'x86_64')
@@ -16,9 +16,9 @@ source=("http://www.freefem.org/ff++/ftp/$pkgname-${pkgver//+/-}.tar.gz"
         'disable-doc.patch'
         'configure-dirs.patch'
         'umfpack.patch')
-sha256sums=('294cab23c4d91fbd4f89fd88d661f6b093fe824ef765034adfca580adcc26162'
+sha256sums=('7bc126a16b3a437e9fe6e4ce52722eb7b6ec40752f23b71a926d9b86f9f2fbad'
             '19ba064469b9c38278fa1e396c0bcd1bb5d067a18eeaef980c86aff599881fdb'
-            '531d1b0b112a89f30ef645d5533717cb09dcad6fecb88d73e87efb5514a4ff07'
+            '0aef5b127176d4a49d9c034649f6e42e85dc31c6af85aae3f54d9d39cdd99ab0'
             'b097abbf87b15404416b473ccbcf6aa2054064ce6258db9340a36c34024d1346')
 
 prepare() {

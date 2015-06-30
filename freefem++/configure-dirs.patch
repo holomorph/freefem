@@ -42,14 +42,14 @@ diff -r ff73fc44ca2d examples++-load/Makefile.in
  	echo loadpath = \"./\" >freefem++.pref
  install-exec-local:: load_compile WHERE_LIBRARY
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/lib
--	test -n "$(MPIPROG)" && $(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/lib/mpi
+-	test -n "$(MPIPROG)" && $(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/lib/mpi || true
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/include
 -	$(mkinstalldirs) -m 755 $(DESTDIR)$(ff_prefix_dir)/etc
 -	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(ff_prefix_dir)/include
 -	$(INSTALL)  -m 555 $(LIST_COMPILE) $(DESTDIR)$(ff_prefix_dir)/lib
 -	$(INSTALL)  -m 555 ff-get-dep.awk  WHERE_LIBRARY-config WHERE_LIBRARY  $(DESTDIR)$(ff_prefix_dir)/lib
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)
-+	test -n "$(MPIPROG)" && $(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)/mpi
++	test -n "$(MPIPROG)" && $(mkinstalldirs) -m 755 $(DESTDIR)$(libdir)/freefem++/$(VERSION)/mpi || true
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(includedir)/freefem++
 +	$(mkinstalldirs) -m 755 $(DESTDIR)$(sysconfdir)
 +	$(INSTALL_DATA)  clapack.h ppmimg.h  bmo.hpp msh3.hpp pcm.hpp  include/*   $(DESTDIR)$(includedir)/freefem++
